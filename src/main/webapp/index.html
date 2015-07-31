@@ -1,0 +1,182 @@
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="ledcube.css">
+	</head>
+
+	<body>
+
+
+<img src="img/logo-first8.png">
+
+<p>&nbsp;</p>
+
+<table>
+	<tr>
+		<td>
+			<h2>View API help</h2>
+			<input type="text" id="baseUrl" value="http://www.first8.nl:8888/ledcube/rest/cube/"><br>
+			<button id="infoButton">info</button>
+		</td>
+		
+		<td>
+			
+			<h2>Show/Write individual pixels</h2>
+	
+			x: <input type="text" id="x" value="3" size="2"><br>
+			y: <input type="text" id="y" value="4" size="2"><br>
+			z: <input type="text" id="z" value="3" size="2"><br>
+			<br>
+			on: <input type="radio" id="on" value="1" name="state"> <br>
+			off: <input type="radio" id="off" value="0" name="state"> <br>
+			<br>
+			<button id="getButton">get pixel</button>
+			<button id="postButton">post pixel</button>
+		</td>
+		<td>	
+			<h2>Show/Write bulk</h2>
+			<br>
+			<textarea rows="8" cols="20" id="bulk">
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+
+11111111
+10000001
+10000001
+10000001
+10000001
+10000001
+10000001
+11111111
+
+00000000
+01111110
+01000010
+01000010
+01000010
+01000010
+01111110
+00000000
+
+00000000
+00000000
+00111100
+00100100
+00100100
+00111100
+00000000
+00000000
+
+00000000
+00000000
+00000000
+00011000
+00011000
+00000000
+00000000
+00000000
+
+00000000
+00000000
+00111100
+00100100
+00100100
+00111100
+00000000
+00000000
+
+00000000
+01111110
+01000010
+01000010
+01000010
+01000010
+01111110
+00000000
+
+11111111
+10000001
+10000001
+10000001
+10000001
+10000001
+10000001
+11111111
+			</textarea>
+			<p>&nbsp;</p>
+			<button id="bulkGetButton">get bulk</button>
+			<button id="bulkPostButton">post bulk</button>
+		</td>
+	</tr>
+	<tr>
+		<td><hr></td>
+		<td><hr></td>
+		<td><hr></td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			<h2>Output</h2>
+			<pre id="result">
+			</pre>
+		</td>
+	</tr>
+</table>
+	
+
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$( "#infoButton" ).click(function() {
+				    $.ajax({
+				        url: $("#baseUrl").val() + "info"
+				    }).done(function(data) {
+				    	$("#result").html(data);
+			    	});
+			});
+
+			$( "#getButton" ).click(function() {
+			    $.ajax({
+			        url: $("#baseUrl").val() + $("#x").val() + "/" + $("#y").val() + "/" + $("#z").val() 
+			    }).done(function(data) {
+			    	$("#result").html(data);
+		    	});
+			});
+
+			$( "#postButton" ).click(function() {
+			    $.ajax({
+			    	type: "POST",
+			        url: $("#baseUrl").val() + $("#x").val() + "/" + $("#y").val() + "/" + $("#z").val() + "/" + $("input:radio[name='state']:checked").val()
+			    }).done(function(data) {
+			    	$("#result").html(data);
+		    	});
+			});
+
+			$( "#bulkPostButton" ).click(function() {
+			    $.ajax({
+			    	type: "POST",
+			        url: $("#baseUrl").val() + "bulk",
+			        data: $("#bulk").val()
+			    }).done(function(data) {
+			    	$("#result").html(data);
+		    	});
+			});
+
+			$( "#bulkGetButton" ).click(function() {
+			    $.ajax({
+			    	type: "GET",
+			        url: $("#baseUrl").val() + "bulk"
+			    }).done(function(data) {
+			    	$("#result").html(data);
+		    	});
+			});
+
+		});
+	</script>
+	</body>
+</html>
