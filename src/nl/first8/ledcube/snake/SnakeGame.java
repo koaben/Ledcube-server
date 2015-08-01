@@ -1,13 +1,11 @@
 package nl.first8.ledcube.snake;
 
-import java.util.Currency;
 import java.util.Random;
 
-import nl.first8.ledcube.Cube;
-import nl.first8.ledcube.UsbCube;
+import nl.first8.ledcube.InputOutputCube;
 import nl.first8.ledcube.gui.Coordinate3D;
 
-public class SnakeGame {
+public class SnakeGame extends InputOutputCube {
 	private static final int MAX_SNAKE_LENGTH = 8 * 8 * 8;
 	private static final Random RANDOM = new Random();
 
@@ -25,11 +23,17 @@ public class SnakeGame {
 	private long candyTime;
 	private int candyTicker;
 
-	private final Cube cube;
-
-	public SnakeGame(Cube cube) {
-		this.cube = cube;
+	public SnakeGame() {
 		reset();
+	}
+	
+	@Override
+	public String getName() {
+	    return "SnakeGame";
+	}
+	
+	public void init() {
+	    reset();
 	}
 	
 	public synchronized void reset() {
@@ -53,7 +57,7 @@ public class SnakeGame {
 		if (now - candyTime > CANDY_DELAY) {
 			candyTime = System.currentTimeMillis();
 			candyTicker++;
-			cube.setPixel(candy, (candyTicker % 2 == 0));
+			setPixel(candy, (candyTicker % 2 == 0));
 		}
 
 		if (now - time > SNAKE_DELAY) {
@@ -62,32 +66,32 @@ public class SnakeGame {
 			drawSnake();
 		}
 		
-		cube.flush();
+		flush();
 
 	}
 
 	private synchronized void drawSnake() throws SnakeDeathException {
-		cube.clear();
+		clear();
 
 		if (snakeHead > snakeTail) {
 			for (int i = snakeHead; i >= snakeTail; i--) {
-				if (cube.getPixel(snake[i])) {
+				if (getPixel(snake[i])) {
 					throw new SnakeDeathException();
 				}
-				cube.setPixel(snake[i], true);
+				setPixel(snake[i], true);
 			}
 		} else {
 			for (int i = 0; i <= snakeHead; i++) {
-				if (cube.getPixel(snake[i])) {
+				if (getPixel(snake[i])) {
 					throw new SnakeDeathException();
 				}
-				cube.setPixel(snake[i], true);
+				setPixel(snake[i], true);
 			}
 			for (int i = MAX_SNAKE_LENGTH - 1; i >= snakeTail; i--) {
-				if (cube.getPixel(snake[i])) {
+				if (getPixel(snake[i])) {
 					throw new SnakeDeathException();
 				}
-				cube.setPixel(snake[i], true);
+				setPixel(snake[i], true);
 			}
 		}
 	}
@@ -120,7 +124,7 @@ public class SnakeGame {
 
 	private synchronized void placeCandy() {
 		candy = new Coordinate3D(RANDOM.nextInt(8), RANDOM.nextInt(8), RANDOM.nextInt(8));
-		if (cube.getPixel(candy)) {
+		if (getPixel(candy)) {
 			placeCandy();
 		}
 	}
@@ -132,4 +136,5 @@ public class SnakeGame {
 	public synchronized void changeDirection(Direction direction) {
 		this.direction = direction;
 	}
+
 }

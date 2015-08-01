@@ -6,6 +6,9 @@ import com.codeminders.hidapi.HIDDevice;
 import com.codeminders.hidapi.HIDDeviceInfo;
 import com.codeminders.hidapi.HIDManager;
 
+/**
+ * Test class for playing with USB HID input/output.
+ */
 public class HIDAPITest {
 	private static final long READ_UPDATE_DELAY_MS = 50L;
 

@@ -2,6 +2,7 @@ package nl.first8.ledcube.rest;
 
 import java.util.Arrays;
 
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -9,19 +10,22 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import nl.first8.ledcube.Cube;
-import nl.first8.ledcube.CubeFactory;
-import nl.first8.ledcube.CubeUtil;
+import nl.first8.ledcube.CubeOutput;
+import nl.first8.ledcube.StringCubeUtil;
 
+/**
+ * Rest endpoint for our web cube.
+ */
 @Path("/cube")
+@RequestScoped
 public class CubeService {
 
 	@POST
 	@Path("/{x}/{y}/{z}/1")
 	public Response pixelOn(@PathParam("x") int x, @PathParam("y") int y, @PathParam("z") int z) {
 		System.err.println("put (" + x + "," + y + "," + z + ") = " + true);
-		CubeFactory.getInstance().setPixel(x, y, z, true);
-		CubeFactory.getInstance().flush();
+		LedCubeRestApplication.getInstance().setPixel(x, y, z, true);
+		LedCubeRestApplication.getInstance().flush();
 		return Response.status(200).build();
 	}
 
@@ -29,8 +33,8 @@ public class CubeService {
 	@Path("/{x}/{y}/{z}/0")
 	public Response pixelOff(@PathParam("x") int x, @PathParam("y") int y, @PathParam("z") int z) {
 		System.err.println("put (" + x + "," + y + "," + z + ") = " + false);
-		CubeFactory.getInstance().setPixel(x, y, z, false);
-		CubeFactory.getInstance().flush();
+		LedCubeRestApplication.getInstance().setPixel(x, y, z, false);
+		LedCubeRestApplication.getInstance().flush();
 		return Response.status(200).build();
 	}
 
@@ -42,35 +46,34 @@ public class CubeService {
 		for (int x=0; x<8; x++) {
 			for (int y=0; y<8; y++) {
 				for (int z=0; z<8; z++) {
-					CubeFactory.getInstance().setPixel(x, y, z, image[x][y][z]!=0);
+				    LedCubeRestApplication.getInstance().setPixel(x, y, z, image[x][y][z]!=0);
 				}
 			}
 		}
-		CubeFactory.getInstance().flush();
+		LedCubeRestApplication.getInstance().flush();
 		return Response.status(200).build();
 	}
 
 	@POST
 	@Path("/bulk")
 	public Response bulk( String image) {
-		Cube cube = CubeFactory.getInstance();
-		CubeUtil.stringToCube(cube,image);
-		System.err.println("bulk: " + image);
-		cube.flush();
+		boolean[][][] cube = StringCubeUtil.stringToArray(image);
+		LedCubeRestApplication.getInstance().setCube(cube);
+		LedCubeRestApplication.getInstance().flush();
 		return Response.status(200).build();
 	}
 
 	@GET
 	@Path("/bulk")
 	public Response bulk() {
-		Cube cube = CubeFactory.getInstance();
-		return Response.ok(CubeUtil.cubeToString(cube)).build();
+		CubeOutput cube = LedCubeRestApplication.getInstance();
+		return Response.ok(StringCubeUtil.cubeToString(cube)).build();
 	}
 	
 	@GET
 	@Path("/{x}/{y}/{z}")
 	public Response getPixel(@PathParam("x") int x, @PathParam("y") int y, @PathParam("z") int z) {
-		boolean pixel = CubeFactory.getInstance().getPixel(x, y, z);
+		boolean pixel = LedCubeRestApplication.getInstance().getPixel(x, y, z);
 		System.err.println("get (" + x + "," + y + "," + z + ") = " + pixel + "\n");
 		return Response.ok(pixel?"1":"0").build();
 	}

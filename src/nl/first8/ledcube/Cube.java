@@ -1,27 +1,25 @@
 package nl.first8.ledcube;
 
+import java.util.function.Function;
+
 import nl.first8.ledcube.gui.Coordinate3D;
 
+/**
+ * Anything that looks like a cube.
+ */
 public interface Cube {
-
-	void init() throws CubeException;
-
-	void flush();
-
-	default void setPixel(Coordinate3D coord, boolean value) {
-		setPixel(coord.getX(), coord.getY(), coord.getZ(), value);
-	}
-
-	default boolean getPixel(Coordinate3D coord) {
-		return getPixel(coord.getX(), coord.getY(), coord.getZ());
-	}
-
-	void setPixel(int x, int y, int z, boolean value);
-
-	boolean getPixel(int x, int y, int z);
-
-	void clear();
-
-	void randomize();
-
+    public static final int WIDTH = 8;
+    public static final int HEIGHT = 8;
+    public static final int DEPTH = 8;
+    
+    
+    default void forEachPixel( Function<Coordinate3D,Void> f ) {
+        for (int x=0; x<WIDTH; x++) {
+            for (int y=0; y<HEIGHT; y++) {
+                for (int z=0; z<DEPTH; z++) {
+                    f.apply(new Coordinate3D(x, y, z));
+                }
+            }
+        }
+    }
 }
