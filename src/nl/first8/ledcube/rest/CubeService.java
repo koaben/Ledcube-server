@@ -2,7 +2,6 @@ package nl.first8.ledcube.rest;
 
 import java.util.Arrays;
 
-import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,16 +15,21 @@ import nl.first8.ledcube.StringCubeUtil;
 /**
  * Rest endpoint for our web cube.
  */
-@Path("/cube")
-@RequestScoped
+@Path("/")
 public class CubeService {
+
+    private static final WebCube WEBCUBE = new WebCube();
+
+    public static WebCube getInstance() {
+        return WEBCUBE;
+    }
 
 	@POST
 	@Path("/{x}/{y}/{z}/1")
 	public Response pixelOn(@PathParam("x") int x, @PathParam("y") int y, @PathParam("z") int z) {
 		System.err.println("put (" + x + "," + y + "," + z + ") = " + true);
-		LedCubeRestApplication.getInstance().setPixel(x, y, z, true);
-		LedCubeRestApplication.getInstance().flush();
+		getInstance().setPixel(x, y, z, true);
+		getInstance().flush();
 		return Response.status(200).build();
 	}
 
@@ -33,8 +37,8 @@ public class CubeService {
 	@Path("/{x}/{y}/{z}/0")
 	public Response pixelOff(@PathParam("x") int x, @PathParam("y") int y, @PathParam("z") int z) {
 		System.err.println("put (" + x + "," + y + "," + z + ") = " + false);
-		LedCubeRestApplication.getInstance().setPixel(x, y, z, false);
-		LedCubeRestApplication.getInstance().flush();
+		getInstance().setPixel(x, y, z, false);
+		getInstance().flush();
 		return Response.status(200).build();
 	}
 
@@ -46,11 +50,11 @@ public class CubeService {
 		for (int x=0; x<8; x++) {
 			for (int y=0; y<8; y++) {
 				for (int z=0; z<8; z++) {
-				    LedCubeRestApplication.getInstance().setPixel(x, y, z, image[x][y][z]!=0);
+				    getInstance().setPixel(x, y, z, image[x][y][z]!=0);
 				}
 			}
 		}
-		LedCubeRestApplication.getInstance().flush();
+		getInstance().flush();
 		return Response.status(200).build();
 	}
 
@@ -58,28 +62,28 @@ public class CubeService {
 	@Path("/bulk")
 	public Response bulk( String image) {
 		boolean[][][] cube = StringCubeUtil.stringToArray(image);
-		LedCubeRestApplication.getInstance().setCube(cube);
-		LedCubeRestApplication.getInstance().flush();
+		getInstance().setCube(cube);
+		getInstance().flush();
 		return Response.status(200).build();
 	}
 
 	@GET
 	@Path("/bulk")
 	public Response bulk() {
-		CubeOutput cube = LedCubeRestApplication.getInstance();
+		CubeOutput cube = getInstance();
 		return Response.ok(StringCubeUtil.cubeToString(cube)).build();
 	}
 	
 	@GET
 	@Path("/{x}/{y}/{z}")
 	public Response getPixel(@PathParam("x") int x, @PathParam("y") int y, @PathParam("z") int z) {
-		boolean pixel = LedCubeRestApplication.getInstance().getPixel(x, y, z);
+		boolean pixel = getInstance().getPixel(x, y, z);
 		System.err.println("get (" + x + "," + y + "," + z + ") = " + pixel + "\n");
 		return Response.ok(pixel?"1":"0").build();
 	}
 
 	@GET
-	@Path("/info")
+	@Path("/")
 	public Response getInfo() {
 		System.err.println("info");
 		String info = "Use GET  /rest/cube/x/y/z to read pixel state\n" + 
