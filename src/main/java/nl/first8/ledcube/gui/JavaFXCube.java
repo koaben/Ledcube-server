@@ -3,8 +3,6 @@ package nl.first8.ledcube.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.first8.ledcube.CubeInput;
-import nl.first8.ledcube.CubeInputListener;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
@@ -13,6 +11,9 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import nl.first8.ledcube.Coordinate3D;
+import nl.first8.ledcube.CubeInput;
+import nl.first8.ledcube.CubeInputListener;
 
 public class JavaFXCube extends Group implements CubeInput {
 

@@ -2,8 +2,6 @@ package nl.first8.ledcube;
 
 import java.util.function.Function;
 
-import nl.first8.ledcube.gui.Coordinate3D;
-
 /**
  * Anything that looks like a cube.
  */

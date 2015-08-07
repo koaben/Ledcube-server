@@ -1,4 +1,4 @@
-package nl.first8.ledcube.gui;
+package nl.first8.ledcube;
 
 public class Coordinate3D {
 	private final int x;

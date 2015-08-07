@@ -2,8 +2,8 @@ package nl.first8.ledcube.snake;
 
 import java.util.Random;
 
+import nl.first8.ledcube.Coordinate3D;
 import nl.first8.ledcube.InputOutputCube;
-import nl.first8.ledcube.gui.Coordinate3D;
 
 public class SnakeGame extends InputOutputCube {
 	private static final int MAX_SNAKE_LENGTH = 8 * 8 * 8;

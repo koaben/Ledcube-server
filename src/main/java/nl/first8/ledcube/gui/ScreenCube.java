@@ -1,5 +1,6 @@
 package nl.first8.ledcube.gui;
 
+import nl.first8.ledcube.Coordinate3D;
 import nl.first8.ledcube.CubeException;
 import nl.first8.ledcube.CubeOutput;
 

@@ -11,8 +11,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import nl.first8.ledcube.CubeOutput;
-import nl.first8.ledcube.UsbCube;
+import nl.first8.ledcube.Coordinate3D;
+import nl.first8.ledcube.CubeInputListener;
 
 public class LedCube extends Group {
 
@@ -20,7 +20,7 @@ public class LedCube extends Group {
 	private LedColor color;
 
 	private List<Sphere> leds = new ArrayList<>();
-	private List<LedCubeListener> listeners = new ArrayList<>();
+	private List<CubeInputListener> listeners = new ArrayList<>();
 
 	public LedCube(int cubeSize, LedColor color) {
 		this.cubeSize = cubeSize;
@@ -29,13 +29,13 @@ public class LedCube extends Group {
 		init();
 	}
 
-	public void addLedCubeListener(final LedCubeListener listener) {
+	public void addLedCubeListener(final CubeInputListener listener) {
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
 	}
 
-	public boolean removeListener(final LedCubeListener listener) {
+	public boolean removeListener(final CubeInputListener listener) {
 		return listeners.remove(listener);
 	}
 
@@ -122,9 +122,10 @@ public class LedCube extends Group {
 	private synchronized void fireOnClick(MouseEvent event) {
 		Sphere s = (Sphere) event.getSource();
 		Coordinate3D c = (Coordinate3D) s.getUserData();
-		for (LedCubeListener l : listeners) {
+		for (CubeInputListener l : listeners) {
 		    LedColor color = getColor(c);
 			l.onPixelChange(c.getX(), c.getY(), c.getZ(), (color==LedColor.ON));
+			l.flush();
 		}
 	}
 

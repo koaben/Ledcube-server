@@ -1,6 +1,5 @@
 package nl.first8.ledcube;
 
-import nl.first8.ledcube.gui.Coordinate3D;
 
 /**
  * A CubeOutput can display a Cube.
